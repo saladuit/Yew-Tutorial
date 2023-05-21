@@ -1,50 +1,31 @@
 use yew::prelude::*;
+use crate::components::molecules::custom_form::CustomForm;
 use gloo::console::log;
-use serde::{Serialize, Deserialize};
-use stylist::yew::styled_component;
+// use serde::{Serialize, Deserialize};
+use stylist::{yew::styled_component, Style};
 
+mod components;
 
-#[derive(Serialize, Deserialize)]
-struct MyObject {
-    username: String,
-    favorite_language: String,
-}
+use components::atoms::main_title::{MainTitle, Color};
+
+const STYLE_FILE: &str = include_str!("main.css");
 
 #[styled_component(App)]
 pub fn app() -> Html {
-    let name = "Saladin";
-    let my_object = MyObject {
-        username: "Saladin".to_owned(),
-        favorite_language: "Rust".to_owned(),
-    };
+    let main_title_load = Callback::from(|message: String| log!(message));
+    let stylesheet: Style = Style::new(STYLE_FILE).unwrap();
 
-    log!("My name is", name);
-    log!("My object is", serde_json::to_string_pretty(&my_object).unwrap());
-    let class = "MyClasses";
-    let message: Option<&str> = None;
-    let tasks = vec!("Learn Rust", "Learn Yew", "Make a web app");
     html! {
-        <>
-        <h1 class={class}>{ "Hello World!!!!" }</h1>
-    if class == "MyClasses" {
-        <p>{ "This is a paragraph" }</p>
-    }
-    else {
-        <p>{ "This is my first yew app!" }</p>
-    }
-    if let Some(message) = message {
-            <p>{ message }</p>
-        } else
-        {
-            <p>{ "There is no message" }</p>
-        }
-        <ul>
-        {list_to_html(tasks)}
-        </ul>
-    </>
+        <div class ={stylesheet}>
+        <MainTitle title="Hi there" color={Color::Normal} on_load={main_title_load}/>
+        <CustomForm/>
+        // <MainTitle title="Visitor" color={Color::Ok}/>
+        // <MainTitle title="Dead" color={Color::Error}/>
+        <p class={css!("color: red; font-size: 75px;")}>{"My name I Saladin Afoh"}</p>
+        </div>
     }
 }
 
-fn list_to_html(list: Vec<&str>) -> Vec<Html> {
-    list.iter().map(|item| html!{<li>{item}</li>}).collect()
-}
+// fn list_to_html(list: Vec<&str>) -> Vec<Html> {
+//     list.iter().map(|item| html!{<li>{item}</li>}).collect()
+// }
